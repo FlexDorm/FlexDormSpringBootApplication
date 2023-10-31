@@ -34,6 +34,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private boolean isEnabled;
+    
     //se tomará como un String los valores de este enum
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

@@ -3,6 +3,7 @@ package com.flexidorm.artsch.security_management.application.controllers;
 import com.flexidorm.artsch.security_management.application.dto.request.*;
 import com.flexidorm.artsch.security_management.application.dto.response.ArrenderResponseDto;
 import com.flexidorm.artsch.security_management.application.dto.response.StudentSignUpResponseDto;
+import com.flexidorm.artsch.security_management.application.dto.response.UserSignInResponseDto;
 import com.flexidorm.artsch.security_management.application.services.IUserService;
 import com.flexidorm.artsch.shared.model.dto.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -57,10 +58,17 @@ public class UserController {
         return new ResponseEntity<>(res,  HttpStatus.OK);
     }
 
-    @Operation(summary = "Delete a user")
-    @DeleteMapping("/{userId}")
+    @Operation(summary = "Logically delete a user")
+    @PutMapping("/delete/{userId}")
     public ResponseEntity<ApiResponse<Object>> deleteUserById(@PathVariable Long userId){
-        var res = userService.deleteUserById(userId);
+        var res = userService.logicDeleteUserById(userId);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Reactive an account")
+    @PutMapping("/reactivate/{userId}")
+    public ResponseEntity<ApiResponse<UserSignInResponseDto>> reactivateUserAccount(@PathVariable Long userId){
+        var res = userService.reactivateAccount(userId);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 }

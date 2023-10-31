@@ -19,4 +19,5 @@ public class UserSignInResponseDto {
     private EGender gender;
     private String university;
     private boolean isVerified;
+    private boolean isEnabled;
 }

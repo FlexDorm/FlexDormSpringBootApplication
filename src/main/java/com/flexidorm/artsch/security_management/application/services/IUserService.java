@@ -43,8 +43,14 @@ public interface IUserService {
     ApiResponse<ArrenderResponseDto> updateArrender(UpdateArrenderRequestDto request, Long arrenderId);
 
     /**
-     * Elimina un usuario
+     * Elimina lógicamente un usuario
      * @param userId El id del usuario
      */
-    ApiResponse<Object> deleteUserById(Long userId);
+    ApiResponse<Object> logicDeleteUserById(Long userId);
+
+    /**
+     * Reactiva una cuenta
+     * @param userId El id del usuario
+     */
+    ApiResponse<UserSignInResponseDto> reactivateAccount(Long userId);
 }

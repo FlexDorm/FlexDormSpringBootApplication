@@ -31,6 +31,14 @@ public class UserService implements IUserService {
 
     @Override
     public ApiResponse<StudentSignUpResponseDto> signUpStudent(SignUpStudentRequestDto request) {
+        //validar que el email y el número de celular no están registrados
+        if (userRepository.existsByEmail(request.getEmail())){
+            throw new ApplicationException(HttpStatus.BAD_REQUEST, "The email given is already registered");
+        }
+        if (userRepository.existsByPhoneNumber(request.getPhoneNumber())){
+            throw  new ApplicationException(HttpStatus.BAD_REQUEST, "The phone number given is already registered");
+        }
+
         //convertir el request (dto) a un objeto de tipo User (entity)
         var student = modelMapper.map(request, Student.class);
         var studentCreated = userRepository.save(student);
@@ -42,6 +50,14 @@ public class UserService implements IUserService {
 
     @Override
     public ApiResponse<ArrenderResponseDto> signUpArrender(SignUpArrenderRequestDto request) {
+        //validar que el email y el número de celular no estén registrados
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new ApplicationException(HttpStatus.BAD_REQUEST, "The email given is already registered");
+        }
+        if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+            throw new ApplicationException(HttpStatus.BAD_REQUEST, "The phone number given is already registered");
+        }
+
         //convertir el request (dto) a un objeto de tipo User (entity)
         var arrender = modelMapper.map(request, Arrender.class);
         var arrenderCreated = userRepository.save(arrender);
@@ -57,10 +73,15 @@ public class UserService implements IUserService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("No user with given email was found"));
 
-        //2) convertir el objeto de tipo User (entity) a un objeto de tipo UserResponseDto (dto)
+        //2) se valida que el usuario esté habilitado
+        if (!user.isEnabled()) {
+            throw new ApplicationException(HttpStatus.NOT_ACCEPTABLE, "The user given is not enabled");
+        }
+
+        //3) convertir el objeto de tipo User (entity) a un objeto de tipo UserResponseDto (dto)
         var userResponseDto = modelMapper.map(user, UserSignInResponseDto.class);
 
-        //3) se verifica si la contraseña dada es igual a la contraseña del usuario
+        //4) se verifica si la contraseña dada es igual a la contraseña del usuario
         if (user.getPassword().equals(request.getPassword())) {
             return new ApiResponse<>("Successfully authenticated user", EStatus.SUCCESS, userResponseDto);
         } else {
@@ -124,13 +145,34 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public ApiResponse<Object> deleteUserById(Long userId) {
+    public ApiResponse<Object> logicDeleteUserById(Long userId) {
         //1) se verifica si existe un usuario con el id dado
         var user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("No user with given id was found"));
 
-        //2) se elimina el usuario
-        userRepository.delete(user);
+        //2) se elimina lógicamente el usuario
+        user.setEnabled(false);
+        userRepository.save(user);
+
         return new ApiResponse<>("User was successfully deleted", EStatus.SUCCESS, null);
     }
+
+    @Override
+    public ApiResponse<UserSignInResponseDto> reactivateAccount(Long userId) {
+        //1) se verifica si existe un usuario con el id dado
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("No user with given id was found"));
+
+        //2) se activa la cuenta del usuario
+        user.setEnabled(true);
+
+        //3) guardar cambios
+        var reactivatedUser = userRepository.save(user);
+
+        //4) convertir el objeto de tipo User (entity) a un objeto de tipo UserResponseDto (dto)
+        var userResponseDto = modelMapper.map(reactivatedUser, UserSignInResponseDto.class);
+
+        return new ApiResponse<>("User was successfully reactivated", EStatus.SUCCESS, userResponseDto);
+    }
+
 }
