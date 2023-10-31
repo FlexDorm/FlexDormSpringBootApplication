@@ -1,5 +1,6 @@
-package com.flexidorm.artsch.rooms.model.entity;
+package com.flexidorm.artsch.rental_management.domain.entities;
 
+import com.flexidorm.artsch.security_management.domain.entities.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,7 +11,6 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
 @Table(name = "arrenders")
 public class Arrender extends User {

@@ -1,22 +1,14 @@
-package com.flexidorm.artsch.rooms.model.entity;
+package com.flexidorm.artsch.security_management.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.flexidorm.artsch.rooms.model.enums.EGender;
+import com.flexidorm.artsch.rental_management.domain.enums.EGender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
 @Table(name = "users")
 //se creará una sola tabla para todas las clases que hereden de esta

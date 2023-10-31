@@ -1,9 +1,8 @@
-package com.flexidorm.artsch.rooms.model.entity;
+package com.flexidorm.artsch.rental_management.domain.entities;
 
-import com.flexidorm.artsch.rooms.model.enums.EPaymentMethod;
+import com.flexidorm.artsch.rental_management.domain.enums.EPaymentMethod;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +11,6 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
 @Table(name = "reservations")
 public class Reservation {

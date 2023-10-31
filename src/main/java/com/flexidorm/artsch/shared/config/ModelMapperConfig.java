@@ -1,4 +1,4 @@
-package com.flexidorm.artsch.config;
+package com.flexidorm.artsch.shared.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

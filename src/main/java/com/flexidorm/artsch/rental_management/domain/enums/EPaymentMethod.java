@@ -1,4 +1,4 @@
-package com.flexidorm.artsch.rooms.model.enums;
+package com.flexidorm.artsch.rental_management.domain.enums;
 
 public enum EPaymentMethod {
     VISA,
