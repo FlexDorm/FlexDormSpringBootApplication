@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
                 webRequest.getDescription(false)
         );
 
-        return new ApiResponse<>("Recurso no encontrado", EStatus.ERROR, errorMessage);
+        return new ApiResponse<>("Resource not found", EStatus.ERROR, errorMessage);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .toList();
 
-        return new ApiResponse<>("Error de validación", EStatus.ERROR, errors);
+        return new ApiResponse<>("Validation error", EStatus.ERROR, errors);
     }
 
     @ExceptionHandler(Exception.class)
@@ -59,6 +59,21 @@ public class GlobalExceptionHandler {
                 webRequest.getDescription(false)
         );
 
-        return new ApiResponse<>("Ha ocurrido un error inesperado", EStatus.ERROR, errorMessage);
+        return new ApiResponse<>("An unexpected error has ocurred", EStatus.ERROR, errorMessage);
+    }
+
+    @ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<ApiResponse<ErrorMessageResponse>> handleAppException(
+            ApplicationException exception,
+            WebRequest webRequest
+    ) {
+        var errorDetails = new ErrorMessageResponse(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                webRequest.getDescription(false)
+        );
+
+        var response = new ApiResponse<>("An error has ocurred", EStatus.ERROR, errorDetails);
+        return new ResponseEntity<>(response, exception.getStatus());
     }
 }
