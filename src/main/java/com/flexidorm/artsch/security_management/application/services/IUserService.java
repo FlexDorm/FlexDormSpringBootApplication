@@ -1,8 +1,6 @@
 package com.flexidorm.artsch.security_management.application.services;
 
-import com.flexidorm.artsch.security_management.application.dto.request.SignInUserRequestDto;
-import com.flexidorm.artsch.security_management.application.dto.request.SignUpArrenderRequestDto;
-import com.flexidorm.artsch.security_management.application.dto.request.SignUpStudentRequestDto;
+import com.flexidorm.artsch.security_management.application.dto.request.*;
 import com.flexidorm.artsch.security_management.application.dto.response.ArrenderResponseDto;
 import com.flexidorm.artsch.security_management.application.dto.response.StudentSignUpResponseDto;
 import com.flexidorm.artsch.security_management.application.dto.response.UserSignInResponseDto;
@@ -31,14 +29,22 @@ public interface IUserService {
     ApiResponse<UserSignInResponseDto> signIn(SignInUserRequestDto request);
 
     /**
-     * Actualiza un usuario
-     * @param user El usuario a actualizar
+     * Actualiza un estudiante
+     * @param request El estudiante a actualizar
+     * @param studentId El id del estudiante
      */
-    void updateUser(User user);
+    ApiResponse<StudentSignUpResponseDto> updateStudent(UpdateStudentRequestDto request, Long studentId);
+
+    /**
+     * Actualiza un arrendador
+     * @param request El arrendador a actualizar
+     * @param arrenderId El id del arrendador
+     */
+    ApiResponse<ArrenderResponseDto> updateArrender(UpdateArrenderRequestDto request, Long arrenderId);
 
     /**
      * Elimina un usuario
      * @param userId El id del usuario
      */
-    void deleteUserById(Long userId);
+    ApiResponse<Object> deleteUserById(Long userId);
 }
