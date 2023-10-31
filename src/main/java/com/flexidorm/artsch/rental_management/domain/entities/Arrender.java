@@ -12,7 +12,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "arrenders")
 public class Arrender extends User {
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean isVerified;

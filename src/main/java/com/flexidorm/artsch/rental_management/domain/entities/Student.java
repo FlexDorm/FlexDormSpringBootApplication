@@ -12,9 +12,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "students")
 public class Student extends User {
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     private String university;
 
     @Column(nullable = false, columnDefinition = "boolean default false")
