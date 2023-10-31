@@ -106,6 +106,9 @@ public class UserService implements IUserService {
         user.setPhoneNumber(StringUtils.hasText(request.getPhoneNumber()) ? request.getPhoneNumber() : user.getPhoneNumber());
         user.setEmail(StringUtils.hasText(request.getEmail()) ? request.getEmail() : user.getEmail());
         user.setPassword(StringUtils.hasText(request.getPassword()) ? request.getPassword() : user.getPassword());
+        user.setAddress(StringUtils.hasText(request.getAddress()) ? request.getAddress() : user.getAddress());
+        user.setBirthDate(request.getBirthDate() != null ? request.getBirthDate() : user.getBirthDate());
+        user.setProfilePicture(StringUtils.hasText(request.getProfilePicture()) ? request.getProfilePicture() : user.getProfilePicture());
         user.setGender(StringUtils.hasText(request.getGender()) ? EGender.valueOf(request.getGender()) : user.getGender());
         ((Student) user).setUniversity(StringUtils.hasText(request.getUniversity()) ? request.getUniversity() : ((Student) user).getUniversity());
 
@@ -134,6 +137,9 @@ public class UserService implements IUserService {
         user.setPhoneNumber(StringUtils.hasText(request.getPhoneNumber()) ? request.getPhoneNumber() : user.getPhoneNumber());
         user.setEmail(StringUtils.hasText(request.getEmail()) ? request.getEmail() : user.getEmail());
         user.setPassword(StringUtils.hasText(request.getPassword()) ? request.getPassword() : user.getPassword());
+        user.setAddress(StringUtils.hasText(request.getAddress()) ? request.getAddress() : user.getAddress());
+        user.setBirthDate(request.getBirthDate() != null ? request.getBirthDate() : user.getBirthDate());
+        user.setProfilePicture(StringUtils.hasText(request.getProfilePicture()) ? request.getProfilePicture() : user.getProfilePicture());
         user.setGender(StringUtils.hasText(request.getGender()) ?  EGender.valueOf(request.getGender()) : user.getGender());
 
         //3) se actualiza el usuario

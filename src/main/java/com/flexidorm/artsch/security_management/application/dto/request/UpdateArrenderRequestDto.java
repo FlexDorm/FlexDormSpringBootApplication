@@ -1,13 +1,14 @@
 package com.flexidorm.artsch.security_management.application.dto.request;
 
 import com.flexidorm.artsch.rental_management.domain.enums.EGender;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -27,5 +28,12 @@ public class UpdateArrenderRequestDto {
     @Email(message = "Email must be valid")
     private String email;
     private String password;
+
+    @Size(min = 5, max = 100, message = "Address must be between 3 and 100 characters")
+    private String address;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthDate;
+    private String profilePicture;
     private String gender;
 }

@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,6 +35,15 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false, length = 100)
+    private String address;
+
+    @Column(nullable = false)
+    private LocalDate birthDate;
+
+    @Column (nullable = false)
+    private String profilePicture;
 
     @Column(nullable = false, columnDefinition = "boolean default true")
     private boolean isEnabled;

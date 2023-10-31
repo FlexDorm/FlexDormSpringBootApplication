@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,6 +19,9 @@ public class StudentSignUpResponseDto {
     private String phoneNumber;
     private String email;
     private EGender gender;
+    private String address;
+    private LocalDate birthDate;
+    private String profilePicture;
     private String university;
     private boolean isVerified;
 }

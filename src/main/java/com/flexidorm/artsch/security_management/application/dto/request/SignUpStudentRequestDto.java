@@ -1,13 +1,13 @@
 package com.flexidorm.artsch.security_management.application.dto.request;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -33,6 +33,17 @@ public class SignUpStudentRequestDto {
 
     @NotBlank(message = "Password is required")
     private String password;
+
+    @NotBlank(message = "Address is required")
+    @Size(min = 5, max = 100, message = "Address must be between 3 and 100 characters")
+    private String address;
+
+    @NotNull(message = "Birthdate is required")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthDate;
+
+    @NotBlank(message = "Profile picture URL is required")
+    private String profilePicture;
 
     @NotBlank(message = "Gender is required")
     private String gender;
