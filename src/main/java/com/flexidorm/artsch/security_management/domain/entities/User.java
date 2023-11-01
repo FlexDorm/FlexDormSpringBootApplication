@@ -48,11 +48,10 @@ public class User {
     @Column (nullable = false)
     private String profilePicture;
 
-    @Column(nullable = false, columnDefinition = "boolean default true")
+    @Column(nullable = false)
     private boolean isEnabled;
     
     //se tomará como un String los valores de este enum
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private EGender gender;
 }

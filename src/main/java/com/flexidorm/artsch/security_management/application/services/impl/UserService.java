@@ -44,7 +44,9 @@ public class UserService implements IUserService {
 
         //convertir el request (dto) a un objeto de tipo User (entity)
         var student = modelMapper.map(request, Student.class);
+        student.setEnabled(true);
         var studentCreated = userRepository.save(student);
+
 
         //convertir el objeto de tipo User (entity) a un objeto de tipo StudentResponseDto (dto)
         var studentResponseDto = modelMapper.map(studentCreated, StudentSignUpResponseDto.class);
@@ -66,6 +68,7 @@ public class UserService implements IUserService {
 
         //convertir el request (dto) a un objeto de tipo User (entity)
         var arrender = modelMapper.map(request, Arrender.class);
+        arrender.setEnabled(true);
         var arrenderCreated = userRepository.save(arrender);
 
         //convertir el objeto de tipo User (entity) a un objeto de tipo ArrenderResponseDto (dto)

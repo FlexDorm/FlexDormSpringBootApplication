@@ -50,6 +50,5 @@ public class SignUpArrenderRequestDto {
     @NotBlank(message = "Profile picture URL is required")
     private String profilePicture;
 
-    @NotBlank(message = "Gender is required")
     private String gender;
 }
