@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @Builder
 public class UserSignInResponseDto {
     private Long userId;
+    private String username;
     private String firstname;
     private String lastname;
     private String phoneNumber;
@@ -25,4 +26,5 @@ public class UserSignInResponseDto {
     private String university;
     private boolean isVerified;
     private boolean isEnabled;
+    private String dtype;
 }

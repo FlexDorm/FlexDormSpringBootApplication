@@ -21,6 +21,13 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     boolean existsByPhoneNumber(String phoneNumber);
 
     /**
+     * Verifica si existe un usuario con el nombre de usuario dado
+     * @param username Nombre de usuario
+     * @return Un booleano
+     */
+    boolean existsByUsername(String username);
+
+    /**
      * Obtiene un usuario con el email dado
      * @param email Email
      * @return Un usuario

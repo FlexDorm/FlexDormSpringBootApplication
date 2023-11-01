@@ -22,6 +22,9 @@ public class UpdateStudentRequestDto {
     @Size(min = 2, max = 50, message = "Lastname must be between 2 and 50 characters")
     private String lastname;
 
+    @Size(min = 2, max = 20, message = "Username must be between 2 and 20 characters")
+    private String username;
+
     @Size(min = 2, max = 50, message = "Lastname must be between 2 and 50 characters")
     @Pattern(regexp = "\\d{9}", message = "Phone number must be 9 digits")
     private String phoneNumber;

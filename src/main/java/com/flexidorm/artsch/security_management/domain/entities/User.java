@@ -27,6 +27,9 @@ public class User {
     @Column(nullable = false, length = 100)
     private String lastname;
 
+    @Column(nullable = false, length = 100, unique = true)
+    private String username;
+
     @Column(nullable = false, length = 9, unique = true)
     private String phoneNumber;
 

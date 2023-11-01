@@ -16,6 +16,7 @@ public class StudentSignUpResponseDto {
     private Long userId;
     private String firstname;
     private String lastname;
+    private String username;
     private String phoneNumber;
     private String email;
     private EGender gender;
