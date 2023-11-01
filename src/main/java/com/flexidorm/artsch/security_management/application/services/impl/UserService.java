@@ -38,6 +38,9 @@ public class UserService implements IUserService {
         if (userRepository.existsByPhoneNumber(request.getPhoneNumber())){
             throw  new ApplicationException(HttpStatus.BAD_REQUEST, "The phone number given is already registered");
         }
+        if (userRepository.existsByUsername(request.getUsername())){
+            throw  new ApplicationException(HttpStatus.BAD_REQUEST, "The username given is already registered");
+        }
 
         //convertir el request (dto) a un objeto de tipo User (entity)
         var student = modelMapper.map(request, Student.class);
@@ -56,6 +59,9 @@ public class UserService implements IUserService {
         }
         if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
             throw new ApplicationException(HttpStatus.BAD_REQUEST, "The phone number given is already registered");
+        }
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new ApplicationException(HttpStatus.BAD_REQUEST, "The username given is already registered");
         }
 
         //convertir el request (dto) a un objeto de tipo User (entity)
@@ -80,6 +86,7 @@ public class UserService implements IUserService {
 
         //3) convertir el objeto de tipo User (entity) a un objeto de tipo UserResponseDto (dto)
         var userResponseDto = modelMapper.map(user, UserSignInResponseDto.class);
+        userResponseDto.setDtype(user.getClass().getSimpleName());
 
         //4) se verifica si la contraseña dada es igual a la contraseña del usuario
         if (user.getPassword().equals(request.getPassword())) {
@@ -103,6 +110,7 @@ public class UserService implements IUserService {
         //2) actualiza los datos
         user.setFirstname(StringUtils.hasText(request.getFirstname()) ? request.getFirstname() : user.getFirstname());
         user.setLastname(StringUtils.hasText(request.getLastname()) ? request.getLastname() : user.getLastname());
+        user.setUsername(StringUtils.hasText(request.getUsername()) ? request.getUsername() : user.getUsername());
         user.setPhoneNumber(StringUtils.hasText(request.getPhoneNumber()) ? request.getPhoneNumber() : user.getPhoneNumber());
         user.setEmail(StringUtils.hasText(request.getEmail()) ? request.getEmail() : user.getEmail());
         user.setPassword(StringUtils.hasText(request.getPassword()) ? request.getPassword() : user.getPassword());
@@ -134,6 +142,7 @@ public class UserService implements IUserService {
         //2) actualiza los datos
         user.setFirstname(StringUtils.hasText(request.getFirstname()) ? request.getFirstname() : user.getFirstname());
         user.setLastname(StringUtils.hasText(request.getLastname()) ? request.getLastname() : user.getLastname());
+        user.setUsername(StringUtils.hasText(request.getUsername()) ? request.getUsername() : user.getUsername());
         user.setPhoneNumber(StringUtils.hasText(request.getPhoneNumber()) ? request.getPhoneNumber() : user.getPhoneNumber());
         user.setEmail(StringUtils.hasText(request.getEmail()) ? request.getEmail() : user.getEmail());
         user.setPassword(StringUtils.hasText(request.getPassword()) ? request.getPassword() : user.getPassword());
