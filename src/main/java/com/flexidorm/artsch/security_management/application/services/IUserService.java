@@ -1,5 +1,6 @@
 package com.flexidorm.artsch.security_management.application.services;
 
+import com.flexidorm.artsch.rental_management.domain.entities.Arrender;
 import com.flexidorm.artsch.security_management.application.dto.request.*;
 import com.flexidorm.artsch.security_management.application.dto.response.ArrenderResponseDto;
 import com.flexidorm.artsch.security_management.application.dto.response.StudentSignUpResponseDto;
@@ -53,4 +54,15 @@ public interface IUserService {
      * @param userId El id del usuario
      */
     ApiResponse<UserSignInResponseDto> reactivateAccount(Long userId);
+
+
+
+    /**
+     * Verifica si un Arrender con el arrenderId dado existe.
+     * @param arrenderId El id del Arrender a verificar.
+     * @return true si existe, false si no.
+     */
+    boolean doesArrenderExist(Long arrenderId);
+
+    Arrender getArrenderById(Long arrenderId);
 }
