@@ -193,4 +193,19 @@ public class UserService implements IUserService {
         return new ApiResponse<>("User was successfully reactivated", EStatus.SUCCESS, userResponseDto);
     }
 
+
+    @Override
+    public boolean doesArrenderExist(Long arrenderId) {
+        return userRepository.existsByUserId(arrenderId);
+    }
+
+    @Override
+    public Arrender getArrenderById(Long arrenderId) {
+        var arrender = userRepository.findByUserId(arrenderId)
+                .orElseThrow(() -> new ResourceNotFoundException("No arrender with given id was found"));
+        var userResponseDto = modelMapper.map(arrender, Arrender.class);
+
+        return new ApiResponse<>("Arrender was successfully returned", EStatus.SUCCESS, userResponseDto).getData();
+    }
+
 }

@@ -33,4 +33,21 @@ public interface IUserRepository extends JpaRepository<User, Long> {
      * @return Un usuario
      */
     Optional<User> findByEmail(String email);
+
+
+    /**
+     * Verifica si existe un usuario con el id de arrender dado
+     * @param arrenderId El id de arrender
+     * @return boolean
+     */
+    boolean existsByUserId(Long arrenderId);
+
+    /**
+     * Obtiene un usuario con el id de arrender dado
+     * @param arrenderId El id de arrender
+     * @return Un usuario
+     */
+    Optional<User> findByUserId(Long arrenderId);
+
+
 }
