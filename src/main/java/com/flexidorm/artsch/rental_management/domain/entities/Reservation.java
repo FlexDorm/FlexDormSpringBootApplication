@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -19,7 +20,16 @@ public class Reservation {
     private Long reservationId;
 
     @Column(nullable = false)
-    private int stayHours;
+    private Date date;
+
+    @Column(nullable = false)
+    private String phone;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String observation;
 
     @Column(nullable = false)
     private double totalPrice;
@@ -29,6 +39,9 @@ public class Reservation {
 
     @Column(nullable = false)
     private LocalDateTime checkOutDate;
+
+    @Column(nullable = true)
+    private String imageUrl=null;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -44,3 +57,4 @@ public class Reservation {
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 }
+
