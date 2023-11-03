@@ -25,8 +25,8 @@ public interface IRoomRepository extends JpaRepository<Room, Long> {
         */
         List<Room> findByArrenderUserId(Long arrenderUserId);
 
+        List<Room> findByStatus(String status);
         //Cambiar el status de la habitación
-
         @Transactional
         @Modifying
         @Query("UPDATE Room r SET r.status = :status WHERE r.roomId = :roomId")
@@ -34,4 +34,5 @@ public interface IRoomRepository extends JpaRepository<Room, Long> {
 
         //Retornar habitaciones por id
         Optional<Room> findByRoomId(Long roomId);
+
 }
