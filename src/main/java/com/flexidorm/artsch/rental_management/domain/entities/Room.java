@@ -46,10 +46,4 @@ public class Room {
     @JoinColumn(name = "arrender_id", nullable = false)
     private Arrender arrender;
 
-    /**
-     * -Info: UNA "habitación" puede tener MUCHAS "reservas"
-     * -MappedBy: estará mapeando por el atributo "room" de la clase Reservation
-     */
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Reservation> reservations = new HashSet<>();
 }

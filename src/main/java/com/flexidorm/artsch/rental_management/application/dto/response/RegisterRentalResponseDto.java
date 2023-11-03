@@ -21,12 +21,11 @@ public class RegisterRentalResponseDto {
     private String email;
     private String observation;
     private double totalPrice;
-    private LocalDateTime checkInDate;
-    private LocalDateTime checkOutDate;
+    private String hourInit;
+    private String hourFinal;
     private String imageUrl;
-    private EPaymentMethod paymentMethod;
-    private Long studentId;
-    private Long roomId;
+    private String student;
+    private Long room;
 
 
 }
