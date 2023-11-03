@@ -77,6 +77,18 @@ public class RoomService implements IRoomService {
         return new ApiResponse<>("Rooms were successfully returned", EStatus.SUCCESS, roomResponseList);
     }
 
+    @Override
+    public ApiResponse<List<RegisterRoomResponseDto>>getByState(String status){
+
+        List<Room> rooms=roomRepository.findByStatus(status);
+
+        List<RegisterRoomResponseDto> roomResponseList = rooms.stream()
+                .map(room -> modelMapper.map(room, RegisterRoomResponseDto.class))
+                .collect(Collectors.toList());
+
+        return new ApiResponse<>("Rooms were successfully returned", EStatus.SUCCESS, roomResponseList);
+    }
+
 /**
  @Override
  public ApiResponse<UpdateRoomResponseDto> updateRoom(UpdateRoomRequestDto request, Long roomId) {

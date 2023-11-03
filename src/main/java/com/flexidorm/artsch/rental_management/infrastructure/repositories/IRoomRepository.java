@@ -20,4 +20,6 @@ public interface IRoomRepository extends JpaRepository<Room, Long> {
         * @return Lista de habitaciones
         */
         List<Room> findByArrenderUserId(Long arrenderUserId);
+
+        List<Room> findByStatus(String status);
 }

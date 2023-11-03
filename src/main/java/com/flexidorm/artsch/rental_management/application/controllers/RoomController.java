@@ -37,4 +37,11 @@ public class RoomController {
         var res = roomService.getRoomsByRenderId(arrenderId);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
+
+    @Operation(summary = "Get rooms by status")
+    @GetMapping("/getRoomsByStatusId/{status}")
+    public ResponseEntity<ApiResponse<List<RegisterRoomResponseDto>>> getRoomsByStatus(@PathVariable String status){
+        var res = roomService.getByState(status);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
 }
