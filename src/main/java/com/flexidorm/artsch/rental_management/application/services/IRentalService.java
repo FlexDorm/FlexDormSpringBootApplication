@@ -19,5 +19,5 @@ public interface IRentalService {
      * Retornar reservas por estudiante
      * @return La reserva realizada
      */
-    ApiResponse<List<RegisterRentalResponseDto>> getRentalsByStudentId(Long studentId);
+    ApiResponse<List<RegisterRentalResponseDto>> getRentalsByStudentId(String student);
 }

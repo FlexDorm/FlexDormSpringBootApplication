@@ -4,9 +4,11 @@ import com.flexidorm.artsch.rental_management.application.dto.request.RegisterRe
 import com.flexidorm.artsch.rental_management.application.dto.response.RegisterRentalResponseDto;
 import com.flexidorm.artsch.rental_management.application.services.IRentalService;
 import com.flexidorm.artsch.rental_management.domain.entities.Reservation;
+import com.flexidorm.artsch.rental_management.domain.entities.Room;
 import com.flexidorm.artsch.rental_management.domain.entities.Student;
 import com.flexidorm.artsch.rental_management.infrastructure.repositories.IRentalRepository;
 import com.flexidorm.artsch.rental_management.infrastructure.repositories.IRoomRepository;
+import com.flexidorm.artsch.security_management.application.dto.response.StudentSignUpResponseDto;
 import com.flexidorm.artsch.security_management.infrastructure.repositories.IUserRepository;
 import com.flexidorm.artsch.shared.exception.ApplicationException;
 import com.flexidorm.artsch.shared.model.dto.response.ApiResponse;
@@ -35,75 +37,34 @@ public class RentalService implements IRentalService {
 
     @Override
     public ApiResponse<RegisterRentalResponseDto> registerRental(RegisterRentalRequestDto request) {
-        if(!roomRepository.existsById(request.getRoomId())){
+        if(!roomRepository.existsById(request.getRoom())){
             throw new ApplicationException(HttpStatus.BAD_REQUEST, "The roomId given does not exist");
-        }
-        if(!userRepository.existsById(request.getStudentId())){
-            throw new ApplicationException(HttpStatus.BAD_REQUEST, "The studentId given does not exist");
-        }
-
-        //validar que el usuario sea estudiante
-        var user = userRepository.findById(request.getStudentId());
-        if (user.isPresent()) {
-            if (user.get().getClass().getSimpleName().equals("Arrender")) {
-                throw new ApplicationException(HttpStatus.BAD_REQUEST, "The user is not a student");
-            }
-        } else {
-            throw new ApplicationException(HttpStatus.BAD_REQUEST, "User not found");
         }
 
         //Validar que la habitacion no este rentada
-        var room = roomRepository.findByRoomId(request.getRoomId())
+        var room = roomRepository.findByRoomId(request.getRoom())
                 .orElseThrow(()-> new ApplicationException(HttpStatus.BAD_REQUEST, "The roomId given does not exist"));
 
         if(room.getStatus().equals("rented")){
             throw new ApplicationException(HttpStatus.BAD_REQUEST, "The room is already rented");
         }
 
+        var reservation = modelMapper.map(request, Reservation.class);
+        var reservationCreated = rentalRepository.save(reservation);
 
-        //Convertir un user a un student
-        var student = modelMapper.map(user, Student.class);
+        roomRepository.updateStatus(request.getRoom(), "rented");
+        
+        var reservationResponseDto = modelMapper.map(reservationCreated, RegisterRentalResponseDto.class);
 
-        //Convertir el request (dto) a un objeto de tipo Reservation (entity)
-        var rental = modelMapper.map(request, Reservation.class);
-        //asignar la habitacion y el estudiante a la reserva, pero antes darle valor al imageUrl de reservation
-        rental.setImageUrl(room.getImageUrl());
-        rental.setRoom(room);
-        rental.setStudent(student);
-
-        //Cambiar el status de la habitacion a rented en la base de datos
-        roomRepository.updateStatus(request.getRoomId(), "rented");
-
-        //Guardar la nueva reserva en la base de datos
-        var rentalCreated = rentalRepository.save(rental);
-
-        //Convertir el objeto de tipo Reservation (entity) a un objeto de tipo RegisterRentalResponseDto (dto)
-        var rentalResponseDto = modelMapper.map(rentalCreated, RegisterRentalResponseDto.class);
-
-        return new ApiResponse<>("Rental was successfully registered", EStatus.SUCCESS, rentalResponseDto);
+        return new ApiResponse<>("Rental was successfully registered", EStatus.SUCCESS,reservationResponseDto );
 
     }
 
     @Override
-    public ApiResponse<List<RegisterRentalResponseDto>> getRentalsByStudentId(Long studentId) {
-        if(!userRepository.existsById(studentId)){
-            throw new ApplicationException(HttpStatus.BAD_REQUEST, "The studentId given does not exist");
-        }
-
-        //validar que el usuario sea estudiante
-        var user = userRepository.findById(studentId);
-        if (user.isPresent()) {
-            if (user.get().getClass().getSimpleName().equals("Arrender")) {
-                throw new ApplicationException(HttpStatus.BAD_REQUEST, "The user is not a student");
-            }
-        } else {
-            throw new ApplicationException(HttpStatus.BAD_REQUEST, "User not found");
-        }
-
-
+    public ApiResponse<List<RegisterRentalResponseDto>> getRentalsByStudentId(String student) {
 
         //Obtener las reservas del estudiante
-        List<Reservation> rentals = rentalRepository.findByStudentUserId(studentId);
+        List<Reservation> rentals = rentalRepository.findByStudent(student);
 
         //Convertir las reservas a un objeto de tipo RegisterRentalResponseDto (dto)
         List<RegisterRentalResponseDto> rentalsResponseDto = rentals.stream()

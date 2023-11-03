@@ -31,10 +31,10 @@ public class RentalController {
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Get rentals by studentId")
-    @GetMapping("/getRentalsByStudentId/{studentId}")
-    public ResponseEntity<ApiResponse<List<RegisterRentalResponseDto>>> getRentalsByStudentId(@PathVariable Long studentId){
-        var res = rentalService.getRentalsByStudentId(studentId);
+    @Operation(summary = "Get rentals by student")
+    @GetMapping("/getRentalsByStudentId/{student}")
+    public ResponseEntity<ApiResponse<List<RegisterRentalResponseDto>>> getRentalsByStudentId(@PathVariable String student){
+        var res = rentalService.getRentalsByStudentId(student);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 

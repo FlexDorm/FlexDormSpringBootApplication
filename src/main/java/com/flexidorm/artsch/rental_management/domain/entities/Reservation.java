@@ -35,26 +35,18 @@ public class Reservation {
     private double totalPrice;
 
     @Column(nullable = false)
-    private LocalDateTime checkInDate;
+    private String hourInit;
 
     @Column(nullable = false)
-    private LocalDateTime checkOutDate;
+    private String hourFinal;
 
     @Column(nullable = true)
     private String imageUrl=null;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EPaymentMethod paymentMethod;
+    private String student;
 
-    //MUCHAS "reservas" van a estar en UN "estudiante"
-    @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
-    private Student student;
-
-    //MUCHAS "reservas" van a estar en UN "habitación"
-    @ManyToOne
-    @JoinColumn(name = "room_id", nullable = false)
-    private Room room;
+    @Column(nullable = false)
+    private Long room;
 }
 

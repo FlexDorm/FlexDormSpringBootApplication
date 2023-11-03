@@ -33,15 +33,14 @@ public class RegisterRentalRequestDto {
 
     private double totalPrice;
 
-    private LocalDateTime checkInDate;
+    private String hourInit;
 
-    private LocalDateTime checkOutDate;
+    private String hourFinal;
 
-    private EPaymentMethod paymentMethod;
+    private String student;
 
-    private Long studentId;
+    private Long room;
 
-    private Long roomId;
-
+    private String imageUrl;
 
 }
