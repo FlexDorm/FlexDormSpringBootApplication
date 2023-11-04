@@ -44,4 +44,11 @@ public class RoomController {
         var res = roomService.getByState(status);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
+
+    @Operation(summary = "Get rooms by roomId")
+    @GetMapping("/getRoomsByRoomId/{roomId}")
+    public ResponseEntity<ApiResponse<List<RegisterRoomResponseDto>>> getRoomsById(@PathVariable Long roomId){
+        var res = roomService.getById(roomId);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
 }
