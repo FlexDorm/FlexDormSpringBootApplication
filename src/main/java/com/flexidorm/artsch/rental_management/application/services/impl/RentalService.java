@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -64,7 +66,7 @@ public class RentalService implements IRentalService {
     public ApiResponse<List<RegisterRentalResponseDto>> getRentalsByStudentId(String student) {
 
         //Obtener las reservas del estudiante
-        List<Reservation> rentals = rentalRepository.findByStudent(student);
+        List<Reservation> rentals = rentalRepository.findByStudentAndMoviment(student,"false");
 
         //Convertir las reservas a un objeto de tipo RegisterRentalResponseDto (dto)
         List<RegisterRentalResponseDto> rentalsResponseDto = rentals.stream()
@@ -72,5 +74,96 @@ public class RentalService implements IRentalService {
                 .toList();
         return new ApiResponse<>("Rentals were successfully obtained", EStatus.SUCCESS, rentalsResponseDto);
 
+    }
+
+    @Override
+    public ApiResponse<List<RegisterRentalResponseDto>> getMovimentByStudentId(String student) {
+
+        //Obtener las reservas del estudiante
+        List<Reservation> rentals = rentalRepository.findByStudentAndMoviment(student,"true");
+
+        //Convertir las reservas a un objeto de tipo RegisterRentalResponseDto (dto)
+        List<RegisterRentalResponseDto> rentalsResponseDto = rentals.stream()
+                .map(rental -> modelMapper.map(rental, RegisterRentalResponseDto.class))
+                .toList();
+        return new ApiResponse<>("Rentals were successfully obtained", EStatus.SUCCESS, rentalsResponseDto);
+
+    }
+
+    @Override
+    public ApiResponse<List<RegisterRentalResponseDto>> getRentalsByArrenderId(String arrenderId) {
+
+        //Obtener las reservas del estudiante
+        List<Reservation> rentals = rentalRepository.findByArrenderIdAndMoviment(arrenderId,"false");
+
+        //Convertir las reservas a un objeto de tipo RegisterRentalResponseDto (dto)
+        List<RegisterRentalResponseDto> rentalsResponseDto = rentals.stream()
+                .map(rental -> modelMapper.map(rental, RegisterRentalResponseDto.class))
+                .toList();
+        return new ApiResponse<>("Rentals were successfully obtained", EStatus.SUCCESS, rentalsResponseDto);
+
+    }
+
+    @Override
+    public ApiResponse<List<RegisterRentalResponseDto>> getMovimentByArrenderId(String arrenderId) {
+
+        //Obtener las reservas del estudiante
+        List<Reservation> rentals = rentalRepository.findByArrenderIdAndMoviment(arrenderId,"true");
+
+        //Convertir las reservas a un objeto de tipo RegisterRentalResponseDto (dto)
+        List<RegisterRentalResponseDto> rentalsResponseDto = rentals.stream()
+                .map(rental -> modelMapper.map(rental, RegisterRentalResponseDto.class))
+                .toList();
+        return new ApiResponse<>("Rentals were successfully obtained", EStatus.SUCCESS, rentalsResponseDto);
+
+    }
+
+
+    @Override
+    public ApiResponse<RegisterRentalResponseDto> toggleFavorite(Long reservationId) {
+        Optional<Reservation> optionalReservation = rentalRepository.findById(reservationId);
+
+        if (optionalReservation.isPresent()) {
+            Reservation reservation = optionalReservation.get();
+            reservation.setFavorite(!reservation.isFavorite());
+            Reservation updatedReservation = rentalRepository.save(reservation);
+
+            // Mapear la entidad actualizada a tu DTO
+            var reservationResponseDto = modelMapper.map(updatedReservation, RegisterRentalResponseDto.class);
+
+            return new ApiResponse<>("Rental was successfully update", EStatus.SUCCESS,reservationResponseDto );
+        } else {
+            throw new ApplicationException(HttpStatus.BAD_REQUEST,"Reservation not found with ID: " + reservationId);
+        }
+    }
+
+    @Override
+    public ApiResponse<RegisterRentalResponseDto> toggleEndRental(Long reservationId) {
+        Optional<Reservation> optionalReservation = rentalRepository.findById(reservationId);
+
+        if (optionalReservation.isPresent()) {
+            Reservation reservation = optionalReservation.get();
+            // Establecer el valor deseado, por ejemplo, establecerlo en true
+            reservation.setMoviment("true");
+            Reservation updatedReservation = rentalRepository.save(reservation);
+            // Mapear la entidad actualizada a tu DTO
+            var reservationResponseDto = modelMapper.map(updatedReservation, RegisterRentalResponseDto.class);
+
+            return new ApiResponse<>("Rental was successfully update", EStatus.SUCCESS,reservationResponseDto );
+        } else {
+            throw new ApplicationException(HttpStatus.BAD_REQUEST,"Reservation not found with ID: " + reservationId);
+        }
+    }
+
+    @Override
+    public ApiResponse<List<RegisterRentalResponseDto>> findByStudentAndFavorite(String student) {
+        List<Reservation> reservations = rentalRepository.findByStudentAndFavoriteIsTrue(student);
+
+        // Mapear las entidades a DTOs
+        List<RegisterRentalResponseDto> rentalsResponseDto = reservations.stream()
+                .map(reservation -> modelMapper.map(reservation, RegisterRentalResponseDto.class))
+                .collect(Collectors.toList());
+
+        return new ApiResponse<>("Rentals favorite true were successfully obtained", EStatus.SUCCESS, rentalsResponseDto);
     }
 }

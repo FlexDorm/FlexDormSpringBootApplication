@@ -43,4 +43,11 @@ public class RegisterRentalRequestDto {
 
     private String imageUrl;
 
+    private boolean favorite;
+
+    private String arrenderId;
+
+    private String moviment;
+
+
 }

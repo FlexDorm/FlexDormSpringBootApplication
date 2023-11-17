@@ -38,4 +38,45 @@ public class RentalController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
+    @Operation(summary = "Get rentals by student")
+    @GetMapping("/getMovimentByStudentId/{student}")
+    public ResponseEntity<ApiResponse<List<RegisterRentalResponseDto>>> getMovimentByStudentId(@PathVariable String student){
+        var res = rentalService.getMovimentByStudentId(student);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get rentals by arrenderId")
+    @GetMapping("/getRentalsByArrenderId/{arrenderId}")
+    public ResponseEntity<ApiResponse<List<RegisterRentalResponseDto>>> getRentalsByArrenderId(@PathVariable String arrenderId){
+        var res = rentalService.getRentalsByArrenderId(arrenderId);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get rentals by arrenderId")
+    @GetMapping("/getMovimentByArrenderId/{arrenderId}")
+    public ResponseEntity<ApiResponse<List<RegisterRentalResponseDto>>> getMovimentByArrenderId(@PathVariable String arrenderId){
+        var res = rentalService.getMovimentByArrenderId(arrenderId);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @PutMapping("/{reservationId}/toggleFavorite")
+        public ResponseEntity<ApiResponse<RegisterRentalResponseDto>> toggleFavorite(@PathVariable Long reservationId) {
+            var res = rentalService.toggleFavorite(reservationId);
+            return new ResponseEntity<>(res, HttpStatus.OK);
+        }
+
+    @PutMapping("/{reservationId}/toggleEndRental")
+    public ResponseEntity<ApiResponse<RegisterRentalResponseDto>> toggleEndRental(@PathVariable Long reservationId) {
+        var res = rentalService.toggleEndRental(reservationId);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @GetMapping("/search/{student}")
+    public ResponseEntity<ApiResponse<List<RegisterRentalResponseDto>>> findByStudentAndFavorite(
+            @PathVariable String student) {
+
+        var res= rentalService.findByStudentAndFavorite(student);
+
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
 }

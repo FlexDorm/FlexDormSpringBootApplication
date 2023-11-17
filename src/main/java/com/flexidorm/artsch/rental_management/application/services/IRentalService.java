@@ -20,4 +20,14 @@ public interface IRentalService {
      * @return La reserva realizada
      */
     ApiResponse<List<RegisterRentalResponseDto>> getRentalsByStudentId(String student);
+    ApiResponse<List<RegisterRentalResponseDto>> getMovimentByStudentId(String student);
+
+    ApiResponse<List<RegisterRentalResponseDto>> getRentalsByArrenderId(String arrenderId);
+
+    ApiResponse<List<RegisterRentalResponseDto>> getMovimentByArrenderId(String arrenderId);
+
+    ApiResponse<RegisterRentalResponseDto> toggleFavorite(Long reservationId);
+
+    ApiResponse<RegisterRentalResponseDto> toggleEndRental(Long reservationId);
+    ApiResponse<List<RegisterRentalResponseDto>> findByStudentAndFavorite(String student);
 }

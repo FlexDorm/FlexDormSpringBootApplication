@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "reservations")
+@Table(name = "rental")
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +47,16 @@ public class Reservation {
     private String student;
 
     @Column(nullable = false)
+    private String arrenderId;
+
+    @Column(nullable = false)
     private Long room;
+
+    @Column(nullable = false)
+    private boolean favorite = false;
+
+    @Column(nullable = true, columnDefinition = "VARCHAR(5) DEFAULT 'false'")
+    private String moviment;
+
 }
 

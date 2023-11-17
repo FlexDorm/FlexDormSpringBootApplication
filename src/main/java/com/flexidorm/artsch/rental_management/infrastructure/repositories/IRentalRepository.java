@@ -7,7 +7,11 @@ import java.util.List;
 
 public interface IRentalRepository extends JpaRepository<Reservation, Long> {
 
-    List<Reservation> findByStudent(String student);
+    List<Reservation> findByStudentAndMoviment(String student, String moviment);
 
+    List<Reservation> findByArrenderIdAndMoviment(String arrenderId, String moviment);
+
+
+    List<Reservation> findByStudentAndFavoriteIsTrue(String student);
 
 }
