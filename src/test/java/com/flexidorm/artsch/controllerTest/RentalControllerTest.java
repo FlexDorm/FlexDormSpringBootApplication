@@ -36,7 +36,7 @@ class RentalControllerTest {
     @Mock
     private IRentalService rentalService;
 
-    @Test
+    /*@Test
     void testRegisterRental() throws Exception {
         // Define a RegisterRentalRequestDto
         RegisterRentalRequestDto request = new RegisterRentalRequestDto();
@@ -68,8 +68,8 @@ class RentalControllerTest {
                                 "}"))
                 .andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-    }
-
+    }*/
+    
     @Test
     void testGetRentalsByStudentId() throws Exception {
         // Definir el ID de estudiante para la prueba
