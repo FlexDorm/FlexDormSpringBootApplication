@@ -1,5 +1,6 @@
 package com.flexidorm.artsch.security_management.application.dto.request;
 
+import com.flexidorm.artsch.rental_management.domain.enums.EGender;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,7 +50,7 @@ public class SignUpStudentRequestDto {
     @NotBlank(message = "Profile picture URL is required")
     private String profilePicture;
 
-    private String gender;
+    private EGender gender;
 
     private String university;
 }
