@@ -8,6 +8,9 @@ import com.flexidorm.artsch.security_management.application.dto.response.Arrende
 import com.flexidorm.artsch.security_management.application.dto.response.StudentSignUpResponseDto;
 import com.flexidorm.artsch.security_management.application.dto.response.UserSignInResponseDto;
 import com.flexidorm.artsch.security_management.application.services.IUserService;
+import com.flexidorm.artsch.security_management.domain.enums.ERole;
+import com.flexidorm.artsch.security_management.domain.jwt.provider.JwtTokenProvider;
+import com.flexidorm.artsch.security_management.infrastructure.repositories.IRoleRepository;
 import com.flexidorm.artsch.security_management.infrastructure.repositories.IUserRepository;
 import com.flexidorm.artsch.shared.exception.ApplicationException;
 import com.flexidorm.artsch.shared.exception.ResourceNotFoundException;
@@ -15,18 +18,35 @@ import com.flexidorm.artsch.shared.model.dto.response.ApiResponse;
 import com.flexidorm.artsch.shared.model.enums.EStatus;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.util.Collections;
 
 @Service
 public class UserService implements IUserService {
     private final IUserRepository userRepository;
+    private final IRoleRepository roleRepository;
     private final ModelMapper modelMapper;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+
 
     //inyección de dependencias
-    public UserService(IUserRepository userRepository, ModelMapper modelMapper) {
+    public UserService(IUserRepository userRepository, IRoleRepository roleRepository, ModelMapper modelMapper, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.modelMapper = modelMapper;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
     }
 
     @Override
@@ -42,9 +62,19 @@ public class UserService implements IUserService {
             throw  new ApplicationException(HttpStatus.BAD_REQUEST, "The username given is already registered");
         }
 
+        //encriptar la contraseña desde el request
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
+
         //convertir el request (dto) a un objeto de tipo User (entity)
         var student = modelMapper.map(request, Student.class);
         student.setEnabled(true);
+
+        //establecer los roles
+        var roles = roleRepository.findByName(ERole.ROLE_USER)
+                .orElseThrow(() -> new ApplicationException(HttpStatus.NOT_FOUND, "No se pudo registrar el usuario, no se encontró el rol USER"));
+        student.setRoles(Collections.singleton(roles)); //establece un solo rol
+
+        //guarda el Student
         var studentCreated = userRepository.save(student);
 
 
@@ -66,9 +96,19 @@ public class UserService implements IUserService {
             throw new ApplicationException(HttpStatus.BAD_REQUEST, "The username given is already registered");
         }
 
+        //encriptar la contraseña desde el request
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
+
         //convertir el request (dto) a un objeto de tipo User (entity)
         var arrender = modelMapper.map(request, Arrender.class);
         arrender.setEnabled(true);
+
+        //establecer los roles
+        var roles = roleRepository.findByName(ERole.ROLE_USER)
+                .orElseThrow(() -> new ApplicationException(HttpStatus.NOT_FOUND, "No se pudo registrar el usuario, no se encontró el rol USER"));
+        arrender.setRoles(Collections.singleton(roles)); //establece un solo rol
+
+        //guarda el Arrender
         var arrenderCreated = userRepository.save(arrender);
 
         //convertir el objeto de tipo User (entity) a un objeto de tipo ArrenderResponseDto (dto)
@@ -78,25 +118,33 @@ public class UserService implements IUserService {
 
     @Override
     public ApiResponse<UserSignInResponseDto> signIn(SignInUserRequestDto request) {
-        //1) se verifica si existe un usuario con el email dado
-        var user = userRepository.findByEmail(request.getEmail())
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+
+        //establece la seguridad
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        //se obtiene el token
+        String token = jwtTokenProvider.generateToken(authentication);
+
+        //se obtiene el usuario autenticado
+        var authenticatedUser = (User) authentication.getPrincipal();
+
+        //se obtienen los datos del usuario autenticado
+        var authenticatedUserData = userRepository.findByEmail(authenticatedUser.getUsername())
                 .orElseThrow(() -> new ResourceNotFoundException("No user with given email was found"));
 
-        //2) se valida que el usuario esté habilitado
-        if (!user.isEnabled()) {
-            throw new ApplicationException(HttpStatus.NOT_ACCEPTABLE, "The user given is not enabled");
-        }
-
         //3) convertir el objeto de tipo User (entity) a un objeto de tipo UserResponseDto (dto)
-        var userResponseDto = modelMapper.map(user, UserSignInResponseDto.class);
-        userResponseDto.setDtype(user.getClass().getSimpleName());
+        var userResponseDto = modelMapper.map(authenticatedUserData, UserSignInResponseDto.class);
+        userResponseDto.setDtype(authenticatedUser.getClass().getSimpleName());
+        userResponseDto.setToken(token);
 
-        //4) se verifica si la contraseña dada es igual a la contraseña del usuario
-        if (user.getPassword().equals(request.getPassword())) {
-            return new ApiResponse<>("Successfully authenticated user", EStatus.SUCCESS, userResponseDto);
-        } else {
-            return new ApiResponse<>("Wrong password", EStatus.ERROR, null);
-        }
+        //retornar la respuesta
+        return new ApiResponse<>("OK", EStatus.SUCCESS, userResponseDto);
     }
 
     @Override
