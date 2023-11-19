@@ -140,8 +140,11 @@ public class UserService implements IUserService {
 
         //3) convertir el objeto de tipo User (entity) a un objeto de tipo UserResponseDto (dto)
         var userResponseDto = modelMapper.map(authenticatedUserData, UserSignInResponseDto.class);
-        userResponseDto.setDtype(authenticatedUser.getClass().getSimpleName());
         userResponseDto.setToken(token);
+
+        //4) obtener el tipo de usuario
+        var dtype = userRepository.findByUserId(authenticatedUserData.getUserId()).get().getClass().getSimpleName();
+        userResponseDto.setDtype(dtype);
 
         //retornar la respuesta
         return new ApiResponse<>("OK", EStatus.SUCCESS, userResponseDto);
