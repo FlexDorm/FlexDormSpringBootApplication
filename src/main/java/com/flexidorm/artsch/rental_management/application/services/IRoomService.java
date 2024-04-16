@@ -22,4 +22,6 @@ public interface IRoomService {
     ApiResponse<List<RegisterRoomResponseDto>> getRoomsByRenderId(Long renderId);
 
     ApiResponse<List<RegisterRoomResponseDto>> getByState(String state);
+
+    ApiResponse<List<RegisterRoomResponseDto>> getById(Long roomId);
 }

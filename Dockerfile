@@ -3,6 +3,6 @@ COPY . .
 RUN mvn clean package
 
 FROM openjdk:17.0.2-slim-buster
-COPY --from=build /target/FlexDormSpringBootApplication-0.0.1-SNAPSHOT.jar FlexDormSpringBootApplication-0.0.1-SNAPSHOT.jar
+COPY --from=build /target/artsch-0.0.1-SNAPSHOT.jar artsch-0.0.1-SNAPSHOT.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "FlexDormSpringBootApplication-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "artsch-0.0.1-SNAPSHOT.jar"]

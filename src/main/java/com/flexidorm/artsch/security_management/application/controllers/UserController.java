@@ -1,5 +1,6 @@
 package com.flexidorm.artsch.security_management.application.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.flexidorm.artsch.security_management.application.dto.request.*;
 import com.flexidorm.artsch.security_management.application.dto.response.ArrenderResponseDto;
 import com.flexidorm.artsch.security_management.application.dto.response.StudentSignUpResponseDto;
@@ -7,10 +8,12 @@ import com.flexidorm.artsch.security_management.application.dto.response.UserSig
 import com.flexidorm.artsch.security_management.application.services.IUserService;
 import com.flexidorm.artsch.shared.model.dto.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "User")
@@ -23,6 +26,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    @SecurityRequirements
     @Operation(summary = "Sign up a student")
     @PostMapping("signUp/student")
     public ResponseEntity<ApiResponse<StudentSignUpResponseDto>> signUpStudent(@Valid @RequestBody SignUpStudentRequestDto request) {
@@ -30,6 +34,7 @@ public class UserController {
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
+    @SecurityRequirements
     @Operation(summary = "Sign up an arrender")
     @PostMapping("signUp/arrender")
     public ResponseEntity<ApiResponse<ArrenderResponseDto>> signUpArrender(@Valid @RequestBody SignUpArrenderRequestDto request) {
@@ -37,9 +42,10 @@ public class UserController {
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
 
+    @SecurityRequirements
     @Operation(summary = "Sign in a user")
     @PostMapping("/signIn")
-    public ResponseEntity<?> signInUser(@Valid @RequestBody SignInUserRequestDto request){
+    public ResponseEntity<?> signInUser(@Valid @RequestBody SignInUserRequestDto request) {
         var res = userService.signIn(request);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
@@ -65,6 +71,7 @@ public class UserController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')") //solo los administradores pueden acceder a este endpoint
     @Operation(summary = "Reactive an account")
     @PutMapping("/reactivate/{userId}")
     public ResponseEntity<ApiResponse<UserSignInResponseDto>> reactivateUserAccount(@PathVariable Long userId){
